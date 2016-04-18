@@ -56,7 +56,7 @@ module top(
 	output SPI_DIN,
 	output SPI_SCLK,
 	output DAC_GCLK//,
-	// Simulación (sacar al compilar a la FPGA). Además se debe cambiar el clock de regspi por el proveniente del oscilador al simular
+	// SimulaciÃ³n (sacar al compilar a la FPGA). AdemÃ¡s se debe cambiar el clock de regspi por el proveniente del oscilador al simular
 	//output [15:0] aux
     );
 	
@@ -82,14 +82,6 @@ module top(
         .divider(8'd200),
         .clk_out(CLK_RSPI)
         );
-    
-    /*Clk_Divider4 Clk_Aux(
-        .clk_in(OSC_GCLK),
-        .divider(16'd2000),
-        .en(1'b1),
-        .clk_out(CLK_aux)
-        );*/
-    //assign CLK_aux = 1'b0;
 	
 	wire regspi_load;
 	wire [3:0] regspi_mode;
@@ -101,7 +93,7 @@ module top(
 	  
     Reg_SPI Reg_SPI(
         .clk(CLK_RSPI),
-        //.clk(OSC_GCLK),// Sólo para simulación
+        //.clk(OSC_GCLK),// SÃ³lo para simulaciÃ³n
         .load(regspi_load),
         .mode(regspi_mode),
         .done(regspi_done),
