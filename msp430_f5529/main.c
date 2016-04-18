@@ -29,7 +29,7 @@ void init(void){
     P1SEL |= BIT0;							// P1.0 (ACLK)
     P1DIR |= BIT0;
 
-    // Configuración
+    // ConfiguraciÃ³n
 
     UCSCTL3 = SELREF__XT2CLK; 				// Select XT2
     P5SEL |= BIT2; 							// Set the PSEL bit for XT2IN
@@ -78,7 +78,7 @@ void init(void){
 	P2OUT &= ~BIT4;
 
 	//////////////////////////////////
-	// Configuración del puerto SPI A0
+	// ConfiguraciÃ³n del puerto SPI A0
 	//////////////////////////////////
 
 	// 	P2.7 UCA0CLK
@@ -91,13 +91,13 @@ void init(void){
 	UCA0CTL0 |= UCMSB | UCMST | UCSYNC | UCCKPH;		// Phase = 1, Polarity = 0, MSB First, 8-bit, Master Mode, 3-Pin, Synchronous.
 	UCA0CTL1 |= UCSSEL__ACLK;							// AMCLK Clock Source. (4MHz)
 
-	UCA0BR0 = 0x0A;							// Prescaler Clock = (UCxxBR0 + UCxxBR1 × 256)
+	UCA0BR0 = 0x0A;							// Prescaler Clock = (UCxxBR0 + UCxxBR1 Ã— 256)
 	UCA0BR1	= 0x00;
 	
-	UCA0CTL1 &= ~UCSWRST;					// Se inicia la máquina de estados del módulo SPI.
+	UCA0CTL1 &= ~UCSWRST;					// Se inicia la mÃ¡quina de estados del mÃ³dulo SPI.
 
 	///////////////////////////////////
-	// Configuración del Puerto UART A1
+	// ConfiguraciÃ³n del Puerto UART A1
 	///////////////////////////////////
 
 	P2DIR |= BIT2;                       	// P2.2 SMCLK set out to pins
@@ -109,7 +109,7 @@ void init(void){
 	//		LSB First
 	//		8-bit
 	//		1 stop bit
-	//		Modo Uart y Asíncrono.
+	//		Modo Uart y AsÃ­ncrono.
 
 	UCA1CTL1 |= UCSSEL_2;                   	// SMCLK Clock Source (20MHz)
 	UCA1BR0 = 173;                           	// 115200 (see User's Guide)
@@ -125,9 +125,9 @@ int SPI_TXRX(unsigned char input){
 
 	UCA0TXBUF = input;						// Enviamos el dato.
 
-	while(!(UCA0IFG & UCRXIFG));			// Esperamos a que el dato se envíe y se reciva correctamente.
+	while(!(UCA0IFG & UCRXIFG));			// Esperamos a que el dato se envÃ­e y se reciva correctamente.
 
-	int output = (int) UCA0RXBUF;			// Leímos el buffer de entrada
+	int output = (int) UCA0RXBUF;			// LeÃ­mos el buffer de entrada
 
 	return output;
 }
@@ -174,7 +174,7 @@ void UART_RXstring(){
 	int count = (int) UART_RXchar();
 	UART_TXchar(0x55);
 
-	// Ahora recibimos los demás bytes y los guardamos en RXBUF que posee un tamaño de 30.
+	// Ahora recibimos los demÃ¡s bytes y los guardamos en RXBUF que posee un tamaÃ±o de 30.
 	int i;
 	for(i=0; i<count; i++){
 		RXBUF[i] = UART_RXchar();
@@ -189,7 +189,7 @@ void UART_Response(){
 
 	int i;
 
-	// Primero enviamos la función de la FPGA
+	// Primero enviamos la funciÃ³n de la FPGA
 	SPI_TXRX(RXBUF[0]);
 
 	switch (RXBUF[0]) {
@@ -218,29 +218,29 @@ void UART_Response(){
 		SPI_TXRX(RXBUF[2]);
 		break;
 
-	case 0x06:	// Reconfiguración
-		SPI_TXRX(0x0A);		// Se envía cualquier dato.
+	case 0x06:	// ReconfiguraciÃ³n
+		SPI_TXRX(0x0A);		// Se envÃ­a cualquier dato.
 		break;
 
 	case 0x07:						// ADC1 Meas
-		SPI_TXRX(RXBUF[1]);			// Se escribe el registro de conversión.
+		SPI_TXRX(RXBUF[1]);			// Se escribe el registro de conversiÃ³n.
 
 		while(!(P2IN & BIT5));			// Esperamos a la FPGA
 
-		READ1 = SPI_TXRX(0x0A);		// Leímos el primer byte.
-		READ2 = SPI_TXRX(0x0A);		// Leímos el segundo byte.
+		READ1 = SPI_TXRX(0x0A);		// LeÃ­mos el primer byte.
+		READ2 = SPI_TXRX(0x0A);		// LeÃ­mos el segundo byte.
 
 		UART_TXchar((unsigned char) READ1);
 		UART_TXchar((unsigned char) READ2);
 
 		break;
 	case 0x08:				// AD2 Meas
-		SPI_TXRX(RXBUF[1]);			// Se escribe el registro de conversión.
+		SPI_TXRX(RXBUF[1]);			// Se escribe el registro de conversiÃ³n.
 
 		while(!(P2IN & BIT5));			// Esperamos a la FPGA
 
-		READ1 = SPI_TXRX(0x0A);		// Leímos el primer byte.
-		READ2 = SPI_TXRX(0x0A);		// Leímos el segundo byte.
+		READ1 = SPI_TXRX(0x0A);		// LeÃ­mos el primer byte.
+		READ2 = SPI_TXRX(0x0A);		// LeÃ­mos el segundo byte.
 
 		UART_TXchar((char) READ1);
 		UART_TXchar((char) READ2);
